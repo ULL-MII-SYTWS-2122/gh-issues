@@ -1,0 +1,29 @@
+{
+  "name": "gh-issues",
+  "version": "1.0.0",
+  "description": "gh extension for issues",
+  "main": "gh-issues.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ULL-MII-SYTWS-2122/gh-issues.git"
+  },
+  "keywords": [
+    "gh",
+    "extension",
+    "javascript"
+  ],
+  "author": "PaulaExposito",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ULL-MII-SYTWS-2122/gh-issues/issues"
+  },
+  "homepage": "https://github.com/ULL-MII-SYTWS-2122/gh-issues#readme",
+  "devDependencies": {
+    "@octokit/core": "^3.5.1",
+    "commander": "^8.3.0",
+    "shelljs": "^0.8.4"
+  }
+}

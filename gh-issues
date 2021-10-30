@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+if ! type -p node >/dev/null; then
+    echo "Node not found on the system" >&2
+    exit 1
+fi
+
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+# Execute js program with command line arguments
+node ${SCRIPT_DIR}/gh-issues.js "$@"
