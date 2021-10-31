@@ -1,6 +1,6 @@
 # gh-issues
 
-This extension emulates some basic operations to get, create and modify Issues.
+This extension emulates some basic operations to get, create and modify issues.
 
 
 ## Installation
@@ -45,9 +45,6 @@ $ gh issues
 3 - i1 (created 14 hours ago)
 2 - Issue 2 (created 17 hours ago)
 1 - Issue 1 (created 17 hours ago)
-
-gh issues -o ULL-MII-SYTWS-2122
-gh issues -c --title "new issue" --body "comments for the new issue"
 ```
 
 Get user repo issues
@@ -146,4 +143,21 @@ Change issue data
 ```
  $ gh issues --modify 6 --title "new title" --body "Hello"
 Issue 6 updated
+```
+
+Filter issues by state:
+
+```
+$ gh issues --state closed -n TFG-TrackYourTrails
+11 - Ubicación (created 4 months ago)
+10 - Resumen y conclusiones (created 4 months ago)
+9 - Vue app (created 5 months ago)
+8 - Integración de mapas (created 5 months ago)
+7 - Postman coverage (created 5 months ago)
+6 - Codecov Setup (created 6 months ago)
+5 - Quasar setup (created 6 months ago)
+4 - API (created 6 months ago)
+3 - Docker (created 6 months ago)
+2 - Setup de remote en organizacion ULL-TFGyMs-vblanco y submodule para memoria (created 6 months ago)
+1 - Create main.yml (created 7 months ago)
 ```
