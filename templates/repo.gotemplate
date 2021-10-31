@@ -1,7 +1,2 @@
-{{ autocolor "red" "=============================================================" }}
-{{range .}}{{autocolor "blue" .number }}
-{{ autocolor "green" "Title:" }} {{.title}}
-{{ autocolor "green" "Body:" }} {{.body}}
-{{if .assignee}}{{ autocolor "green" "Assignee:" }} {{ .assignee.login }} {{end}}
-{{ autocolor "red" "=============================================================" }}
+{{range .}}{{autocolor "blue" .number }} - {{ autocolor "green" .title }} (created {{timeago .created_at}})
 {{end}}

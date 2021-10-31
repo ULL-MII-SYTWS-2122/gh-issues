@@ -2,12 +2,6 @@ const { program } = require('commander');
 const { version, description } = require('./package.json');
 const fs = require('fs');
 const shell = require('shelljs');
-const { Octokit } = require("@octokit/core");
-// const spawn = require('child_process').spawn;
-
-const octokit = new Octokit({
-    aut: "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"
-});
 
 
 // Command line options
@@ -17,16 +11,25 @@ program
     .version(version)
     .description(description)
     .usage('[options]')
-    .option('-r, --repo <name>', 'specify repo name')
-    .option('-o, --org <name>', 'specify organization name')
+    .option('-n, --repo <name>', 'specify repo name')
+    .option('-org, --organization <name>', 'specify organization name')
     .option('-s, --state <state>', 'specify issue state [open|closed|all], default state is open', "open")
     .option('-a, --assigned', 'get issues assigned to user', false)
-    .option('-c, --open', 'open an issue')
+    .option('-i, --issue <number>', 'specify an issue')
+    .option('-o, --open', 'open an issue')
+    .option('-r, --reopen <number>', 'reopen an issue')
+    .option('-c, --close <number>', 'close an issue')
     .option('-t, --title <title>', 'set title')
     .option('-b, --body <body>', 'set body', '')
-    // .option('-u, --user <name>', 'specify user of repo')
-    // .option('-l, --list', 'list all this repo issues')
-  
+    .option('-m, --modify <number>', 'modify issue data');
+
+program.addHelpText('after', `
+    * Option '-a' do not accept other options
+    * Options '-o', '-r', '-c' are only available for current repository
+`
+);
+
+
 program.parse(process.argv);
 const options = program.opts();
 
@@ -59,12 +62,13 @@ function gh(...args) {
     let result = shell.exec(command, { silent: true, stdio: "inherit" });     // silent option don't echo program output to console
 
     if (result.code != 0) {
-        shell.echo(`Error: command ${command} failed: invalid options`);
+        shell.echo(`Error: command ${command} failed: invalid options \n${result.stderr}`);
         shell.exit(result.code);
     }
 
     return result.stdout.replace(/\s+$/,'');
 }
+
 
 // Access gh api data
 
@@ -73,9 +77,9 @@ function getUserLogin() {
     return gh(command);
 }
 
-function getThisRepoIssues() {
+function getThisRepoIssues(state) {
     // let command = "api repos/:owner/:repo/issues | jq '.[] | .number,.title,.body,.user.login,.assignee.login'";
-    let command = "api repos/:owner/:repo/issues --template \"$(cat templates/repo.gotemplate)\"";
+    let command = `api repos/:owner/:repo/issues?state=${state} --template \"$(cat templates/repo.gotemplate)\"`;
     console.log(gh(command));
 }
 
@@ -84,57 +88,99 @@ function getRepoIssues(owner, repo, state) {
     console.log(gh(command));
 }
 
+function getIssue(owner, repo, number) {
+    let command =`api /repos/${owner}/${repo}/issues/${number} --template \"$(cat templates/issue.gotemplate)\"`;
+    console.log(gh(command));
+}
+
 function getAssignedIssuesByUser(state) {
-    let command =`api /issues?state=${state} --template \"$(cat templates/repo.gotemplate)\"`;
+    let command =`api /issues?state=${state} --template \"$(cat templates/assignee.gotemplate)\"`;
     console.log(gh(command));
 }
 
 function getAssignedIssuesByOrg(org, state) {
-    let command =`api /orgs/${org}/issues?state=${state} --template \"$(cat templates/org.gotemplate)\"`;
+    let command =`api /orgs/${org}/issues?state=${state} --template \"$(cat templates/assignee.gotemplate)\"`;
     console.log(gh(command));
 }
 
-async function openIssue(title, body, owner, repo) {
-    let command=`api -X POST /repos/${owner}/${repo}/issues -f title="${title}" -f body="${body}"`;
-    console.log(gh(command));
+function openIssue(title, body, owner, repo) {
+    gh(`api -X POST /repos/${owner}/${repo}/issues -f title="${title}" -f body="${body}"`);
+    console.log(`A new issue has been created`);
+}
+
+function updateIssueState(owner, repo, number, state) {
+    gh(`api -X PATCH /repos/${owner}/${repo}/issues/${number} -f state=${state}`);
+    console.log(`Issue ${number} is now ${state}`);
+}
+
+function updateIssue(owner, repo, number, fields) {
+    gh(`api -X PATCH /repos/${owner}/${repo}/issues/${number} ${fields}`);
+    console.log(`Issue ${number} updated`);
 }
 
 
 // Choose what to execute
 
-if (options.repo) {
+if (options.modify) {
+    // title, body, state can be modified
+    let modifiers = [
+        { "title": options.title },
+        { "body": options.body },
+    ]
+
+    let fields = "";
+
+    modifiers.forEach(element => {
+        if (element[Object.keys(element)[0]]) {
+            fields += `-f ${Object.keys(element)[0]}="${element[Object.keys(element)[0]]}" `;
+        }
+    });
+
+    updateIssue(":owner", ":repo", options.modify, fields);
+}
+else if (options.repo) {
     if (options.user) {
-        console.log(`GET ISSUES OF ${options.user} - ${options.repo}`);
-        getRepoIssues(options.user, options.repo, options.state);
+        if (options.issue)
+            getIssue(options.user, options.repo, options.issue);
+        else 
+            getRepoIssues(options.user, options.repo, options.state);
     }
-    else if (options.org) {
-        console.log(`GET ISSUES OF ${options.org} - ${options.repo}`);
-        getRepoIssues(options.org, options.repo, options.state);
+    else if (options.organization) {
+        if (options.issue)
+            getIssue(options.organization, options.repo, options.issue);
+        else 
+            getRepoIssues(options.organization, options.repo, options.state);
     }
     else {
         // This option uses auth user
-        console.log(`GET ISSUES OF ${getUserLogin()} - ${options.repo}`);
-        getRepoIssues(getUserLogin(), options.repo, options.state);
+        if (options.issue)
+            getIssue(getUserLogin(), options.repo, options.issue);
+        else 
+            getRepoIssues(getUserLogin(), options.repo, options.state);
     }
 }
 else if (options.assigned) {
-    console.log(`Assigned issues`)
     getAssignedIssuesByUser(options.state)
 }
-else if (options.org) {
-    console.log(`Assigned issues in org`)
-    getAssignedIssuesByOrg(options.org, options.state)
+else if (options.organization) {
+    getAssignedIssuesByOrg(options.organization, options.state)
 }
 else if (options.user) {
     getRepoIssues()
 }
 else if (options.open && options.title) {
-    console.log(`Open issue`)
-
     openIssue(options.title, options.body, ":owner", ":repo");
 }
+else if (options.close) {
+    updateIssueState(":owner", ":repo", options.close, "close");
+}
+else if (options.reopen) {
+    updateIssueState(":owner", ":repo", options.reopen, "open");
+}
 else {
-    console.log('GET ISSUES OF THIS REPO');
-    getThisRepoIssues();
+    if (options.issue)
+        getIssue(":owner", ":repo", options.issue);
+    else 
+        getThisRepoIssues(options.state);
 }
 

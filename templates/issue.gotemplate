@@ -1,0 +1,10 @@
+{{autocolor "blue" "Title:" }} {{autocolor "green" .title}}
+{{autocolor "blue" "Number of issue:" }} {{autocolor "green" .number}}
+{{autocolor "blue" "State:" }} {{autocolor "green" .state}}
+
+{{ autocolor "blue" "Body:" }} {{.body}}
+
+{{autocolor "blue" "Assignees:" }} {{range .assignees}}{{.login}} {{end}}
+
+Issue created by {{autocolor "yellow" .user.login}} {{timeago .created_at}}
+{{autocolor "red" .html_url}}
