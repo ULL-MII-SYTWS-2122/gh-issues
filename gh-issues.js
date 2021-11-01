@@ -6,16 +6,16 @@ const shell = require('shelljs');
 const goTemplates = ["repo", "issue", "assignee"];
 let templates = {};
 
-( () => {
-    goTemplates.forEach(temp => {
-        // await fs.readFile(`templates/${temp}.gotemplate`, (err, data) => {
-        //     templates[temp] = data.toString();
-        //     console.log(templates[temp]);
-        // });
-        templates[temp] = fs.readFileSync(`templates/${temp}.gotemplate`).toString();
-        // console.log(templates[temp]);
-    });
-}) ();
+// ( () => {
+//     goTemplates.forEach(temp => {
+//         // await fs.readFile(`templates/${temp}.gotemplate`, (err, data) => {
+//         //     templates[temp] = data.toString();
+//         //     console.log(templates[temp]);
+//         // });
+//         templates[temp] = fs.readFileSync(`templates/${temp}.gotemplate`).toString();
+//         // console.log(templates[temp]);
+//     });
+// }) ();
 
 
 // Command line options
