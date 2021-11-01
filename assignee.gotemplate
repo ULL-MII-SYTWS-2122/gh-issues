@@ -1,0 +1,10 @@
+{{ autocolor "red" "=============================================================" }}
+{{range .}}
+{{autocolor "blue" .number }}
+{{ autocolor "green" "Title:" }} {{.title}}
+{{ autocolor "green" "Body:" }} {{.body}}
+{{if .assignee}}{{ autocolor "green" "Assignee:" }} {{range .assignees}}{{ .login }} {{end}} {{end}}
+{{ autocolor "green" "Repository:" }} {{.repository.full_name}}
+
+{{ autocolor "red" "=============================================================" }}
+{{end}}

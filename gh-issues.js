@@ -3,6 +3,20 @@ const { version, description } = require('./package.json');
 const fs = require('fs');
 const shell = require('shelljs');
 
+const goTemplates = ["repo", "issue", "assignee"];
+let templates = {};
+
+( () => {
+    goTemplates.forEach(temp => {
+        // await fs.readFile(`templates/${temp}.gotemplate`, (err, data) => {
+        //     templates[temp] = data.toString();
+        //     console.log(templates[temp]);
+        // });
+        templates[temp] = fs.readFileSync(`templates/${temp}.gotemplate`).toString();
+        // console.log(templates[temp]);
+    });
+}) ();
+
 
 // Command line options
 
@@ -79,27 +93,28 @@ function getUserLogin() {
 
 function getThisRepoIssues(state) {
     // let command = "api repos/:owner/:repo/issues | jq '.[] | .number,.title,.body,.user.login,.assignee.login'";
-    let command = `api repos/:owner/:repo/issues?state=${state} --template \"$(cat templates/repo.gotemplate)\"`;
+    let command = `api repos/:owner/:repo/issues?state=${state} --template \"$(cat repo.gotemplate)\"`;
+    // let command = `api repos/:owner/:repo/issues?state=${state} --template \"${templates.repo}\"`;
     console.log(gh(command));
 }
 
 function getRepoIssues(owner, repo, state) {
-    let command =`api /repos/${owner}/${repo}/issues?state=${state} --template \"$(cat templates/repo.gotemplate)\"`;
+    let command =`api /repos/${owner}/${repo}/issues?state=${state} --template \"$(cat repo.gotemplate)\"`;
     console.log(gh(command));
 }
 
 function getIssue(owner, repo, number) {
-    let command =`api /repos/${owner}/${repo}/issues/${number} --template \"$(cat templates/issue.gotemplate)\"`;
+    let command =`api /repos/${owner}/${repo}/issues/${number} --template \"$(cat issue.gotemplate)\"`;
     console.log(gh(command));
 }
 
 function getAssignedIssuesByUser(state) {
-    let command =`api /issues?state=${state} --template \"$(cat templates/assignee.gotemplate)\"`;
+    let command =`api /issues?state=${state} --template \"$(cat assignee.gotemplate)\"`;
     console.log(gh(command));
 }
 
 function getAssignedIssuesByOrg(org, state) {
-    let command =`api /orgs/${org}/issues?state=${state} --template \"$(cat templates/assignee.gotemplate)\"`;
+    let command =`api /orgs/${org}/issues?state=${state} --template \"$(cat assignee.gotemplate)\"`;
     console.log(gh(command));
 }
 
@@ -183,4 +198,3 @@ else {
     else 
         getThisRepoIssues(options.state);
 }
-
