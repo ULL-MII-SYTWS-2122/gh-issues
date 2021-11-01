@@ -32,6 +32,7 @@ Options:
   -h, --help                   display help for command
 
     * Option '-a' do not accept other options
+    * Options '-o', '-r', '-c' are only available for current repository
 ```
 
 ## Examples

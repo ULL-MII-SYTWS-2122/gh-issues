@@ -3,20 +3,6 @@ const { version, description } = require('./package.json');
 const fs = require('fs');
 const shell = require('shelljs');
 
-const goTemplates = ["repo", "issue", "assignee"];
-let templates = {};
-
-// ( () => {
-//     goTemplates.forEach(temp => {
-//         // await fs.readFile(`templates/${temp}.gotemplate`, (err, data) => {
-//         //     templates[temp] = data.toString();
-//         //     console.log(templates[temp]);
-//         // });
-//         templates[temp] = fs.readFileSync(`templates/${temp}.gotemplate`).toString();
-//         // console.log(templates[temp]);
-//     });
-// }) ();
-
 
 // Command line options
 
@@ -63,9 +49,11 @@ if (!shell.which('git'))
 if (!shell.which('gh'))
     showError('Sorry, this extension requires GitHub Cli (gh) installed!');
 
-let isGitFolder = shell.exec("git rev-parse --is-inside-work-tree", {silent: true});
-if (!isGitFolder || !fs.existsSync(".git")) {
-    showError('The current folder must be the root of a git repo when running this command!');
+function isGitFolder() {
+    let isGitFolder = shell.exec("git rev-parse --is-inside-work-tree", {silent: true});
+    if (!isGitFolder || !fs.existsSync(".git")) {
+        showError('The current folder must be the root of a git repo when running this command!');
+    }
 }
 
 
@@ -92,43 +80,48 @@ function getUserLogin() {
 }
 
 function getThisRepoIssues(state) {
+    isGitFolder();
     // let command = "api repos/:owner/:repo/issues | jq '.[] | .number,.title,.body,.user.login,.assignee.login'";
-    let command = `api repos/:owner/:repo/issues?state=${state} --template \"$(cat repo.gotemplate)\"`;
-    // let command = `api repos/:owner/:repo/issues?state=${state} --template \"${templates.repo}\"`;
+    let command = `api repos/:owner/:repo/issues?state=${state} --template \"$(cat ${__dirname}/templates/repo.gotemplate)\"`;
     console.log(gh(command));
 }
 
 function getRepoIssues(owner, repo, state) {
-    let command =`api /repos/${owner}/${repo}/issues?state=${state} --template \"$(cat repo.gotemplate)\"`;
+    let command =`api /repos/${owner}/${repo}/issues?state=${state} --template \"$(cat ${__dirname}/templates/repo.gotemplate)\"`;
     console.log(gh(command));
 }
 
 function getIssue(owner, repo, number) {
-    let command =`api /repos/${owner}/${repo}/issues/${number} --template \"$(cat issue.gotemplate)\"`;
+    if (repo == ":repo")
+        isGitFolder();
+    let command =`api /repos/${owner}/${repo}/issues/${number} --template \"$(cat ${__dirname}/templates/issue.gotemplate)\"`;
     console.log(gh(command));
 }
 
 function getAssignedIssuesByUser(state) {
-    let command =`api /issues?state=${state} --template \"$(cat assignee.gotemplate)\"`;
+    let command =`api /issues?state=${state} --template \"$(cat ${__dirname}/templates/assignee.gotemplate)\"`;
     console.log(gh(command));
 }
 
 function getAssignedIssuesByOrg(org, state) {
-    let command =`api /orgs/${org}/issues?state=${state} --template \"$(cat assignee.gotemplate)\"`;
+    let command =`api /orgs/${org}/issues?state=${state} --template \"$(cat ${__dirname}/templates/assignee.gotemplate)\"`;
     console.log(gh(command));
 }
 
 function openIssue(title, body, owner, repo) {
+    isGitFolder();
     gh(`api -X POST /repos/${owner}/${repo}/issues -f title="${title}" -f body="${body}"`);
     console.log(`A new issue has been created`);
 }
 
 function updateIssueState(owner, repo, number, state) {
+    isGitFolder();
     gh(`api -X PATCH /repos/${owner}/${repo}/issues/${number} -f state=${state}`);
     console.log(`Issue ${number} is now ${state}`);
 }
 
 function updateIssue(owner, repo, number, fields) {
+    isGitFolder();
     gh(`api -X PATCH /repos/${owner}/${repo}/issues/${number} ${fields}`);
     console.log(`Issue ${number} updated`);
 }

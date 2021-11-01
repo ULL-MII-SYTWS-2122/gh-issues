@@ -1,2 +1,0 @@
-{{range .}}{{autocolor "blue" .number }} - {{ autocolor "green" .title }} (created {{timeago .created_at}})
-{{end}}
