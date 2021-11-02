@@ -64,7 +64,8 @@ function gh(...args) {
     let result = shell.exec(command, { silent: true, stdio: "inherit" });     // silent option don't echo program output to console
 
     if (result.code != 0) {
-        shell.echo(`Error: command ${command} failed: invalid options \n${result.stderr}`);
+        // shell.echo(`Error: command ${command} failed: invalid options \n${result.stderr}`);
+        shell.echo(`Sorry! This issue or repository does not exits`);
         shell.exit(result.code);
     }
 
@@ -130,7 +131,7 @@ function updateIssue(owner, repo, number, fields) {
 // Choose what to execute
 
 if (options.modify) {
-    // title, body, state can be modified
+    // title and body can be modified
     let modifiers = [
         { "title": options.title },
         { "body": options.body },
