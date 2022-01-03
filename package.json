@@ -1,10 +1,12 @@
 {
   "name": "gh-issues",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "gh extension for issues",
   "main": "gh-issues.js",
   "scripts": {
-    "test": "mocha --reporter spec"
+    "test": "mocha --reporter spec",
+    "docs:build": "documentation build gh-issues.js -f html -o docs",
+    "docs:serve": "documentation serve gh-issues.js "
   },
   "repository": {
     "type": "git",
@@ -16,7 +18,7 @@
     "javascript"
   ],
   "author": "PaulaExposito",
-  "license": "ISC",
+  "license": "CC-BY-NC-4.0",
   "bugs": {
     "url": "https://github.com/ULL-MII-SYTWS-2122/gh-issues/issues"
   },
@@ -25,6 +27,7 @@
     "@octokit/core": "^3.5.1",
     "chai": "^4.3.4",
     "commander": "^8.3.0",
+    "documentation": "^13.2.5",
     "mocha": "^9.1.3",
     "shelljs": "^0.8.4"
   }

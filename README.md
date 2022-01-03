@@ -1,6 +1,6 @@
 # gh-issues
 
-This extension emulates some basic operations to get, create and modify issues.
+Extension that emulates some basic operations to get, create and modify issues.
 
 
 ## Installation
@@ -33,6 +33,12 @@ Options:
 
     * Option '-a' do not accept other options
     * Options '-o', '-r', '-c' are only available for current repository
+```
+
+## Tests
+
+```
+npm run test
 ```
 
 ## Examples
@@ -162,3 +168,11 @@ $ gh issues --state closed -n TFG-TrackYourTrails
 2 - Setup de remote en organizacion ULL-TFGyMs-vblanco y submodule para memoria (created 6 months ago)
 1 - Create main.yml (created 7 months ago)
 ```
+
+
+## Release History
+
+* 0.1.0 - Initial release, requests to gh
+* 0.2.0 - Refactor to use modules
+<!-- * 1.0.0 Initial release -->
+
