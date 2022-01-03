@@ -17,6 +17,8 @@ jobs:
     needs: build
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - name: "Check action"
-        run: echo "Action is working successfully"
+      - run: npm ci
+      - name: "Run Mocha and Chai tests"
+        run: npm test
+        env: 
+          CI: true 
