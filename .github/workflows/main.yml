@@ -23,9 +23,30 @@ jobs:
       - run: npm ci
       - name: "Install local extension"
         run: gh extension install .
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: "View extensions"
         run: gh extension list
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: "Run Mocha and Chai tests"
         run: npm test
         env: 
           CI: true 
+
+
+
+# Para testing detectar un comentario abierto
+# name: Comment when opened
+# on:
+#   issues:
+#     types:
+#       - opened
+# jobs:
+#   comment:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - run: gh issue comment $ISSUE --body "Thank you for opening this issue!"
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#           ISSUE: ${{ github.event.issue.html_url }}
