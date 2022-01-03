@@ -33,6 +33,8 @@ jobs:
         run: npm test
         env: 
           CI: true 
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
 
 
 
