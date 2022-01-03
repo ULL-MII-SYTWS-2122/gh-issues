@@ -37,16 +37,15 @@ jobs:
       - name: "View owner"
         run: npm owner ls
 
-      - name: "npm login"
-        run: npm login
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-
       # If the tests pass, publish in npm
-      - name: "Publish in npm"
-        run: npm publish
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      # - name: "Publish in npm"
+      #   run: npm publish
+      #   env:
+      #     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_AUTH_TOKEN }}
 
 
   # If module is published create an issue to execute production tests in testing-gh-issues
