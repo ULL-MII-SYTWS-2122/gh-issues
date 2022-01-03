@@ -17,6 +17,8 @@ jobs:
     needs: build
     runs-on: ubuntu-20.04
     steps:
+      - run: node --version
+      - run: npm --version
       - run: npm ci
       - name: "Run Mocha and Chai tests"
         run: npm test
