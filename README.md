@@ -3,10 +3,17 @@
 Extension that emulates some basic operations to get, create and modify issues.
 
 
+## Documentation
+
+[gh-issues docs](https://ull-mii-sytws-2122.github.io/gh-issues/)
+
+
 ## Installation
 
 ```
 gh extension install ULL-MII-SYTWS-2122/gh-issues
+
+npm install @alu0101106335/gh-issues
 ```
 
 ## Usage
@@ -172,7 +179,5 @@ $ gh issues --state closed -n TFG-TrackYourTrails
 
 ## Release History
 
-* 0.1.0 - Initial release, requests to gh
-* 0.2.0 - Refactor to use modules
+* 1.0.0 - Initial release, requests to gh
 <!-- * 1.0.0 Initial release -->
-

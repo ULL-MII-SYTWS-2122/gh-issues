@@ -1,5 +1,6 @@
 const shell = require('shelljs');
 const fs = require('fs');
+const path = require('path');
 
 
 // Check environment
@@ -65,7 +66,7 @@ function getUserLogin() {
  */
 function getThisRepoIssues(state) {
     isGitFolder();
-    let command = `api repos/:owner/:repo/issues?state=${state} --template \"$(cat ${__dirname}/templates/repo.gotemplate)\"`;
+    let command = `api repos/:owner/:repo/issues?state=${state} --template \"$(cat ${path.join(__dirname, 'templates', 'repo.gotemplate')})\"`;
     return gh(command);
 }
 
@@ -77,7 +78,7 @@ function getThisRepoIssues(state) {
  * @returns {string} response
  */
 function getRepoIssues(owner, repo, state) {
-    let command =`api /repos/${owner}/${repo}/issues?state=${state} --template \"$(cat ${__dirname}/templates/repo.gotemplate)\"`;
+    let command =`api /repos/${owner}/${repo}/issues?state=${state} --template \"$(cat ${path.join(__dirname, 'templates', 'repo.gotemplate')})\"`;
     return gh(command);
 }
 
@@ -91,7 +92,7 @@ function getRepoIssues(owner, repo, state) {
 function getIssue(owner, repo, number) {
     if (repo == ":repo")
         isGitFolder();
-    let command =`api /repos/${owner}/${repo}/issues/${number} --template \"$(cat ${__dirname}/templates/issue.gotemplate)\"`;
+    let command =`api /repos/${owner}/${repo}/issues/${number} --template \"$(cat ${path.join(__dirname, 'templates', 'issue.gotemplate')})\"`;
     return gh(command);
 }
 
@@ -101,7 +102,7 @@ function getIssue(owner, repo, number) {
  * @returns {string} response
  */
 function getAssignedIssuesByUser(state) {
-    let command =`api /issues?state=${state} --template \"$(cat ${__dirname}/templates/assignee.gotemplate)\"`;
+    let command =`api /issues?state=${state} --template \"$(cat ${path.join(__dirname, 'templates', 'assignee.gotemplate')})\"`;
     return gh(command);
 }
 
@@ -112,7 +113,7 @@ function getAssignedIssuesByUser(state) {
  * @returns {string} response
  */
 function getAssignedIssuesByOrg(org, state) {
-    let command =`api /orgs/${org}/issues?state=${state} --template \"$(cat ${__dirname}/templates/assignee.gotemplate)\"`;
+    let command =`api /orgs/${org}/issues?state=${state} --template \"$(cat ${path.join(__dirname, 'templates', 'assignee.gotemplate')})\"`;
     return gh(command);
 }
 

@@ -1,0 +1,61 @@
+name: Publish NPM Module
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs: 
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: 'https://registry.npmjs.org'
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: "Install dependencies" 
+        run: npm ci
+
+      - name: "Install local extension"
+        run: gh extension install .
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: "View extensions"
+        run: gh extension list
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: "Run Mocha and Chai tests"
+        run: npm test
+        env: 
+          CI: true 
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      # If the tests pass, publish in npm
+      - name: "Publish in npm"
+        run: npm publish
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+
+  # If module is published create an issue to execute production tests in testing-gh-issues
+  create-issue:
+    needs: publish-npm
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      # When published warns testing repository to execute the production tests
+      - name: "Comment issue in testing-gh-issue"
+        run: gh issue create --repo ULL-MII-SYTWS-2122/testing-gh-issues --label publish-npm --title "prueba0" --body ""
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          ISSUE: ${{ secrets.TESTING_GH_ISSUES_ISSUES_URL }}
+
