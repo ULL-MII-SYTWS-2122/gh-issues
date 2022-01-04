@@ -39,7 +39,6 @@ function gh(...args) {
     let result = shell.exec(command, { silent: true, stdio: "inherit" });     // silent option don't echo program output to console
 
     if (result.code != 0) {
-        // shell.echo(`Error: command ${command} failed: invalid options \n${result.stderr}`);
         shell.echo(`Sorry! This issue or repository does not exits`);
         shell.exit(result.code);
     }

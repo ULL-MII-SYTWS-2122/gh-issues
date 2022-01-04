@@ -179,5 +179,6 @@ $ gh issues --state closed -n TFG-TrackYourTrails
 
 ## Release History
 
-* 1.0.0 - Initial release, requests to gh
-<!-- * 1.0.0 Initial release -->
+* 0.1.0 - Requests to gh
+* 0.2.0 - Using JS Modules
+* 1.0.0 - First release
