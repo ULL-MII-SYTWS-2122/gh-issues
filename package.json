@@ -1,6 +1,6 @@
 {
   "name": "@alu0101106335/gh-issues",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "gh extension for issues",
   "main": "gh-issues.js",
   "scripts": {
@@ -25,12 +25,17 @@
   },
   "homepage": "https://github.com/ULL-MII-SYTWS-2122/gh-issues#readme",
   "devDependencies": {
-    "@octokit/core": "^3.5.1",
     "chai": "^4.3.4",
-    "commander": "^8.3.0",
     "documentation": "^13.2.5",
-    "mocha": "^9.1.3",
+    "mocha": "^9.1.3"
+  },
+  "dependencies": {
+    "@octokit/core": "^3.5.1",
+    "commander": "^8.3.0",
     "path": "^0.12.7",
     "shelljs": "^0.8.4"
+  },
+  "bin": {
+    "gh-issues": "gh-issues.js"
   }
 }
