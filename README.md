@@ -182,3 +182,4 @@ $ gh issues --state closed -n TFG-TrackYourTrails
 * 0.1.0 - Requests to gh
 * 0.2.0 - Using JS Modules
 * 1.0.0 - First release
+* 1.0.1 - Bug ejecutable en .bin
