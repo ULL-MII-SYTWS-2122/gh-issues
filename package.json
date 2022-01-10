@@ -1,6 +1,6 @@
 {
   "name": "@alu0101106335/gh-issues",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "gh extension for issues",
   "main": "gh-issues.js",
   "scripts": {
